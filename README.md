@@ -2,6 +2,10 @@
 
 A lightweight, zero-cost **Applicant Tracking System (ATS)** and **Job Application Portal** built using **React 18** (frontend) and **Google Apps Script** (backend), powered by Google Sheets, Google Drive, and Gmail.
 
+[![Live Demo](https://img.shields.io/badge/Live-Demo-2e7d32?style=for-the-badge&logo=google-chrome&logoColor=white)](https://script.google.com/macros/s/AKfycbzIIJ1go0McvQLlswdTo9GmGa0stA9DzOpTsU0burRoM5PxzMC7EaIHpattSd1aonPiug/exec)
+
+🔗 **Live Demo URL:** [Open Web App](https://script.google.com/macros/s/AKfycbzIIJ1go0McvQLlswdTo9GmGa0stA9DzOpTsU0burRoM5PxzMC7EaIHpattSd1aonPiug/exec)
+
 ---
 
 ## ✨ Key Features
