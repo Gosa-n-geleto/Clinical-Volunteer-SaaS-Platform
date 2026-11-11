@@ -53,5 +53,5 @@ The relational schema is normalized across six core operational tables:
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/](https://github.com/)<your-username>/clinical-volunteer-saas.git
+   git clone [https://github.com/](https://github.com/)<Gosa-n-geleto>/clinical-volunteer-saas.git
    cd clinical-volunteer-saas
