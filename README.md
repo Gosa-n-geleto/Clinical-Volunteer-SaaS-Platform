@@ -1,44 +1,57 @@
-# 📋 Serverless ATS & Job Application Portal
+# Clinical & Volunteer Operations SaaS Platform
 
-A lightweight, zero-cost **Applicant Tracking System (ATS)** and **Job Application Portal** built using **React 18** (frontend) and **Google Apps Script** (backend), powered by Google Sheets, Google Drive, and Gmail.
+A full-stack recruitment, onboarding, and tele-consultation management platform built to streamline volunteer intake, clinical staff credentialing, and real-time virtual interviews for youth-focused community clinic operations.
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-2e7d32?style=for-the-badge&logo=google-chrome&logoColor=white)](https://script.google.com/macros/s/AKfycbzIIJ1go0McvQLlswdTo9GmGa0stA9DzOpTsU0burRoM5PxzMC7EaIHpattSd1aonPiug/exec)
+## Overview
 
-🔗 **Live Demo URL:** [Open Web App](https://script.google.com/macros/s/AKfycbzIIJ1go0McvQLlswdTo9GmGa0stA9DzOpTsU0burRoM5PxzMC7EaIHpattSd1aonPiug/exec)
+Coordinating high-volume youth volunteer cohorts and clinical support personnel requires structured intake, rapid credential verification, and seamless communication. This platform replaces fragmented spreadsheet workflows with a unified **PHP/MySQL** application featuring **OAuth 2.0** authentication, **Google Gemini API**-assisted candidate screening, automated email dispatch, and embedded **WebRTC** video rooms for remote onboarding and triage consultations.
 
----
-
-## ✨ Key Features
-
-### 👤 For Applicants
-* **Dynamic Job Board:** Displays real-time job descriptions stored directly in Google Sheets.
-* **Structured Application Form:** Captures personal details, academic history (SSC, HSC, Bachelor, Postgraduate), and work experience.
-* **CV/Resume Upload:** Direct PDF upload (up to 5MB) converted to Base64 and saved into a dedicated Google Drive folder.
-* **Automated Confirmation:** Instant on-screen confirmation modal and email acknowledgement via Gmail.
-
-### 🛡️ For Recruiters / Admins
-* **Password-Protected Portal:** Secure admin login with session management.
-* **Interactive Analytics Dashboard:** Real-time KPI charts powered by **Chart.js** (shortlist/rejection rates, application trends, gender & experience distribution).
-* **Candidate Pipeline Management:** Filter, search, and update candidate statuses (`Pending`, `Shortlisted`, `Rejected`).
-* **CV Viewer:** Built-in PDF preview modal with direct Google Drive integration.
-* **Interview Management:** Schedule and reschedule interviews with automatic calendar/email invite dispatch.
-* **Email Automation:** Customizable email templates with placeholders and bulk-messaging capabilities.
+### Key Capabilities
+* **Multi-Stage Intake & Credentialing Form Engine:** Captures academic qualifications (secondary through postgraduate), clinical/volunteer experience, demographic records, and document uploads (`CV_URL` / certification attachments).
+* **AI-Assisted Screening (Gemini API):** Parses applicant backgrounds and uploaded CVs against role requirements (`Settings: JOB_DESCRIPTION`) to generate structured candidate summaries and role-fit scores.
+* **Pipeline & Status Tracking:** Real-time state transitions (`Applied` -> `Shortlisted` -> `Interview Scheduled` -> `Onboarded` / `Rejected`) with full audit attribution (`Updated_By`, `Updated_At`).
+* **Embedded WebRTC Video Consultations:** Peer-to-peer browser video sessions integrated directly into the interview scheduling module (`Interviews`), eliminating external meeting link dependencies.
+* **Automated Mail-Merge & Audit Logging:** Dynamic template rendering (`confirmation`, `shortlist`, `interview`, `rejection`) with complete delivery tracking in `EmailLog`.
 
 ---
 
-## 🛠️ Tech Stack
+## System Architecture & Tech Stack
 
-* **Frontend:** React 18 (via CDN), Babel Standalone, Chart.js 4.4, Font Awesome 6
-* **Backend:** Google Apps Script (V8 Engine)
-* **Database:** Google Sheets
-* **File Storage:** Google Drive
-* **Mail Dispatch:** Gmail API / `MailApp`
+| Layer | Technology | Role |
+| :--- | :--- | :--- |
+| **Backend** | PHP 8.2+ (PDO) | RESTful routing, form validation, session management, and mail queue dispatch |
+| **Database** | MySQL 8.0 | Relational persistence for intake records, status logs, templates, and interview schedules |
+| **Authentication** | OAuth 2.0 (Google Identity) | Role-based access control (RBAC) for administrators, coordinators, and applicants |
+| **AI Integration** | Google Gemini API | Automated CV parsing, qualification matching, and candidate briefing generation |
+| **Real-Time Comms** | WebRTC + WebSockets | Low-latency video/audio rooms for remote volunteer interviews and clinical triage |
+| **Storage Integration** | Google Drive API | Cloud document storage and retrieval for applicant CVs and certifications |
 
 ---
 
-## 📂 Project Structure
+## Database Schema
 
-```text
-├── Code.gs          # Apps Script backend API, Drive upload logic & Sheets database handlers
-├── index.html       # Single-file React SPA (Application form + Admin dashboard)
-└── README.md        # Project documentation
+The relational schema is normalized across six core operational tables:
+
+1. **`applications`** — Master intake table storing personal details, academic history (`ssc_*`, `hsc_*`, `bachelor_*`, `postgraduate_*`), prior organizational experience, and cloud document pointers (`cv_url`).
+2. **`candidate_status`** — Tracks pipeline state transitions (`status`, `updated_at`, `updated_by`) indexed by candidate email.
+3. **`interviews`** — Manages scheduled virtual and on-site evaluations (`scheduled_at`, `candidate_email`, `interview_date`, `location` / WebRTC room ID, `interviewer`, `notes`, `status`).
+4. **`email_templates`** — Stores reusable transactional templates (`confirmation`, `shortlist`, `interview`, `rejection`) with dynamic variable interpolation (`[Candidate Name]`, `[Position]`, `[Date]`, `[Time]`, `[Location/Meeting Link]`, `[Interviewer Name]`).
+5. **`email_log`** — Immutable audit trail of all outbound notifications (`timestamp`, `recipient`, `subject`, `body`, `sent_by`).
+6. **`settings` & `users`** — System-wide configuration parameters (active role descriptions, screening rubrics) and OAuth-linked administrator accounts.
+
+---
+
+## Local Development Setup
+
+### Prerequisites
+* PHP >= 8.2 with `pdo_mysql`, `curl`, and `openssl` extensions enabled
+* MySQL >= 8.0 or MariaDB >= 10.6
+* Composer
+* Google Cloud Console project (configured for **OAuth 2.0**, **Drive API**, and **Gemini API**)
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/](https://github.com/)<your-username>/clinical-volunteer-saas.git
+   cd clinical-volunteer-saas
